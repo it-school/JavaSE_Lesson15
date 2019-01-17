@@ -6,12 +6,13 @@ import java.util.Arrays;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        /*
-        byte[] bytesToWrite = {1, 2, 3}; //что записываем
-        byte[] bytesReaded = new byte[10]; //куда считываем
+
+        // Запись массива байтов
+        byte[] bytesToWrite = {65, 97, 45}; //что записываем
+
         String fileName = "d:\\test.txt", fileName1 = "d:\\test1.txt";
         try {
-            FileOutputStream outFile = new FileOutputStream(fileName);
+            FileOutputStream outFile = new FileOutputStream(fileName, true);
             outFile.write(bytesToWrite); //запись в файл
             outFile.close();
         } catch (FileNotFoundException e) {
@@ -20,9 +21,13 @@ public class Main {
             System.out.println("Ошибка ввода/вывода:" + e.toString());
         }
 
+        // Чтение массива байтов
         try {
-            FileInputStream inFile = new FileInputStream(fileName1);
+            FileInputStream inFile = new FileInputStream(fileName);
             int bytesAvailable = inFile.available(); //сколько можно считать
+            System.out.println("Available: " + bytesAvailable);
+
+            byte[] bytesReaded = new byte[bytesAvailable]; //куда считываем
             int count = inFile.read(bytesReaded, 0, bytesAvailable);
 
             System.out.println(Arrays.toString(bytesReaded));
@@ -33,26 +38,26 @@ public class Main {
         } catch (IOException e) {
             System.out.println("Ошибка ввода/вывода:" + e.toString());
         }
-*/
 
-        /*
+
+        // Сцепление содержимого файлов
         FileInputStream inFile1 = null;
         FileInputStream inFile2 = null;
         SequenceInputStream sequenceStream = null;
         FileOutputStream outFile = null;
         try {
-            inFile1 = new FileInputStream("file1.txt");
+            inFile1 = new FileInputStream("d:\\file1.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         try {
-            inFile2 = new FileInputStream("file2.txt");
+            inFile2 = new FileInputStream("d:\\file2.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         sequenceStream = new SequenceInputStream(inFile1, inFile2);
         try {
-            outFile = new FileOutputStream("file3.txt");
+            outFile = new FileOutputStream("d:\\file3.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -77,19 +82,20 @@ public class Main {
 
         }
 
-        byte[] bytesReaded = new byte[10];
-        String fileName ="file1.txt";
+        // Тестирование производительности буферизированной записи
+        byte[] bytesReaded = new byte[100];
+        String fileName2 = "file1.txt";
         InputStream inStream =null;
         OutputStream outStream =null;
-//Записать в файл некоторое количество байт
+        //Записать в файл некоторое количество байт
         long timeStart =System.currentTimeMillis();
         try {
-            outStream =new FileOutputStream(fileName);
+            outStream = new FileOutputStream(fileName2);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        //outStream =new BufferedOutputStream(outStream);
-        for(int i=100000000;--i>=0;)
+
+        for (int i = 100000; --i >= 0; )
         {
             try {
                 outStream.write(bytesReaded);
@@ -116,8 +122,8 @@ public class Main {
         System.out.println(System.currentTimeMillis()-timeStart);
 
 
-
-        String fileName = "d:\\file6.txt";
+// Запись строковых данных в файл
+        String fileName5 = "d:\\file6.txt";
         FileWriter fw = null;
         BufferedWriter bw = null;
         FileReader fr = null;
@@ -125,9 +131,9 @@ public class Main {
         // Строка, которая будет записана в файл
         String data = "Some data to be written and readed \n";
         try {
-            fw = new FileWriter(fileName);
+            fw = new FileWriter(fileName5);
             bw = new BufferedWriter(fw);
-            System.out.println("Write some data to file: " + fileName);
+            System.out.println("Write some data to file: " + fileName5);
             // Несколько раз записать строку
             for (int i = (int) (Math.random() * 10); --i >= 0; )
                 bw.write(data);
@@ -144,8 +150,10 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println(System.currentTimeMillis() - timeStart);
 
 
+// Запись строк в стандартный поток вывода
         PrintWriter pw = new PrintWriter(System.out, true);
         pw.println("Это строка:");
         int i = -7;
@@ -154,6 +162,7 @@ public class Main {
         pw.println(d);
 
 
+// Сериализация простого объекта
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         Object objSave = new Integer(1);
         ObjectOutputStream oos = new ObjectOutputStream(os);
@@ -170,46 +179,65 @@ public class Main {
         }
         pw.println("--------------------------");
         pw.println(objRead.toString());
-*/
 
-        // ----------serialize---------------
-        Employee e = new Employee();
-        e.name = "John Silver";
-        e.address = "Treasure Island";
-        e.number = 151;
+
+// Сериализация 1 экземпляра пользовательского класса
+        Pirate pirate = new Pirate();
+        pirate.name = "Long John Silver";
+        pirate.address = "Treasure Island";
+        pirate.age = 40;
 
         try {
-            FileOutputStream fileOut = new FileOutputStream("./employee.ser");
+            FileOutputStream fileOut = new FileOutputStream("./pirate.ser");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(e);
-            out.flush(); out.close();
-            fileOut.flush(); fileOut.close();
-            System.out.printf("Serialized data is saved in ./employee.ser");
+            out.writeObject(pirate);
+            out.flush();
+            out.close();
+            fileOut.flush();
+            fileOut.close();
+            System.out.printf("Serialized data is saved in ./pirate.ser");
         } catch (IOException ex) {
             ex.printStackTrace();
         }
         // ---------deserialize -----------
-        Employee e1 = null;
+        Pirate e1 = null;
         try {
-            FileInputStream fileIn = new FileInputStream("./employee.ser");
+            FileInputStream fileIn = new FileInputStream("./pirate.ser");
             ObjectInputStream in = new ObjectInputStream(fileIn);
-            e1 = (Employee) in.readObject();
+            e1 = (Pirate) in.readObject();
             in.close();
             fileIn.close();
         } catch (IOException ex) {
             ex.printStackTrace();
             return;
         } catch (ClassNotFoundException c) {
-            System.out.println("Employee class not found");
+            System.out.println("Pirate class not found");
             c.printStackTrace();
             return;
         }
 
-        System.out.println("Deserialized Employee...");
+        System.out.println("\nDeserialized pirate...");
         System.out.println("Name: " + e1.name);
         System.out.println("Address: " + e1.address);
-        System.out.println("Number: " + e1.number);
+        System.out.println("Age: " + e1.age);
 
+        System.out.println("\n----------------------------------\n");
+
+
+// Сериализация списка экземпляров пользовательского класса
+
+        Pirates pirates = new Pirates();
+        pirates.Add(pirate);
+        pirates.Add(new Pirate("Dr. David Livesey", "Bristol", 100));
+        pirates.Add(new Pirate("Captain Alexander Smollett", "Bristol", 100000));
+        System.out.println(pirates.toString());
+
+        pirates.Save("./pirates.ser");
+        // ---------deserialize -----------
+        pirates.Clear();
+
+        pirates.Load("./pirates.ser");
+        System.out.println("\n\nDeserialized pirates: ...");
+        System.out.println(pirates.toString());
     }
 }
-
