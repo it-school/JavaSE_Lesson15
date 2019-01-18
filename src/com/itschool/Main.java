@@ -6,58 +6,55 @@ import java.util.Arrays;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-
         // Запись массива байтов
-        byte[] bytesToWrite = {65, 97, 45}; //что записываем
+        byte[] bytesToWrite = {65, 45, 90, 44, 32, 97, 45, 122, 32, 44, 48, 45, 57, 46, 13}; // байты, которые записываем
 
-        String fileName = "d:\\test.txt", fileName1 = "d:\\test1.txt";
+        String fileNameForWriting = "test.txt";
         try {
-            FileOutputStream outFile = new FileOutputStream(fileName, true);
+            FileOutputStream outFile = new FileOutputStream(fileNameForWriting, true);
             outFile.write(bytesToWrite); //запись в файл
             outFile.close();
         } catch (FileNotFoundException e) {
-            System.out.println("Невозможно произвести запись в файл:" + fileName);
+            System.out.println("Ошибка доступа к файлу (" + fileNameForWriting + "): " + e.getLocalizedMessage());
         } catch (IOException e) {
-            System.out.println("Ошибка ввода/вывода:" + e.toString());
+            System.out.println("Ошибка ввода/вывода (" + fileNameForWriting + "): " + e.getLocalizedMessage());
         }
 
         // Чтение массива байтов
         try {
-            FileInputStream inFile = new FileInputStream(fileName);
-            int bytesAvailable = inFile.available(); //сколько можно считать
-            System.out.println("Available: " + bytesAvailable);
+            FileInputStream inFile = new FileInputStream(fileNameForWriting);
+            int bytesAvailable = inFile.available(); //сколько можно будет считать из файла
+            System.out.println("Доступно для чтения: " + bytesAvailable);
 
-            byte[] bytesReaded = new byte[bytesAvailable]; //куда считываем
+            byte[] bytesReaded = new byte[bytesAvailable]; // массив, в котрый считываем данные
             int count = inFile.read(bytesReaded, 0, bytesAvailable);
-
-            System.out.println(Arrays.toString(bytesReaded));
+            System.out.println("Было реально считано: " + Arrays.toString(bytesReaded));
 
             inFile.close();
         } catch (FileNotFoundException e) {
-            System.out.println("Невозможно произвести чтение из файла:" + fileName1);
+            System.out.println("Ошибка доступа к файлу (" + fileNameForWriting + "): " + e.getLocalizedMessage());
         } catch (IOException e) {
-            System.out.println("Ошибка ввода/вывода:" + e.toString());
+            System.out.println("Ошибка ввода/вывода (" + fileNameForWriting + "): " + e.getLocalizedMessage());
         }
 
-
-        // Сцепление содержимого файлов
+// Сцепление содержимого файлов
         FileInputStream inFile1 = null;
         FileInputStream inFile2 = null;
         SequenceInputStream sequenceStream = null;
         FileOutputStream outFile = null;
         try {
-            inFile1 = new FileInputStream("d:\\file1.txt");
+            inFile1 = new FileInputStream("filecat1.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         try {
-            inFile2 = new FileInputStream("d:\\file2.txt");
+            inFile2 = new FileInputStream("filecat2.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         sequenceStream = new SequenceInputStream(inFile1, inFile2);
         try {
-            outFile = new FileOutputStream("d:\\file3.txt");
+            outFile = new FileOutputStream("filecat3.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -79,23 +76,22 @@ public class Main {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
 
-        // Тестирование производительности буферизированной записи
-        byte[] bytesReaded = new byte[100];
-        String fileName2 = "file1.txt";
-        InputStream inStream =null;
-        OutputStream outStream =null;
+// Тестирование производительности буферизированной записи
+        byte[] bytesReaded = new byte[1000000];
+        String fileName2 = "bufferedWritingTestFile.txt";
+        InputStream inStream = null;
+        OutputStream outStream = null;
         //Записать в файл некоторое количество байт
-        long timeStart =System.currentTimeMillis();
+        long timeStart = System.currentTimeMillis();
         try {
             outStream = new FileOutputStream(fileName2);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 
-        for (int i = 100000; --i >= 0; )
+        for (int i = 100; --i >= 0; )
         {
             try {
                 outStream.write(bytesReaded);
@@ -107,23 +103,24 @@ public class Main {
         outStream.close();
 
         try {
-            inStream =new FileInputStream(fileName);
+            inStream = new FileInputStream(fileNameForWriting);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        inStream =new BufferedInputStream(inStream);
+        inStream = new BufferedInputStream(inStream);
         int error = 0;
-        do{
+        do {
             error = inStream.read();
-          //  if (error >= 0)
-                //System.out.println(error);
-        }  while(error!=-1);
+            //  if (error >= 0)
+            //System.out.println(error);
+        } while (error != -1);
         inStream.close();
-        System.out.println(System.currentTimeMillis()-timeStart);
+        System.out.println(System.currentTimeMillis() - timeStart);
+
 
 
 // Запись строковых данных в файл
-        String fileName5 = "d:\\file6.txt";
+        String stringsFile = "stringsFile.txt";
         FileWriter fw = null;
         BufferedWriter bw = null;
         FileReader fr = null;
@@ -131,31 +128,30 @@ public class Main {
         // Строка, которая будет записана в файл
         String data = "Some data to be written and readed \n";
         try {
-            fw = new FileWriter(fileName5);
+            fw = new FileWriter(stringsFile);
             bw = new BufferedWriter(fw);
-            System.out.println("Write some data to file: " + fileName5);
+            System.out.println("Записано в файл: " + stringsFile);
             // Несколько раз записать строку
             for (int i = (int) (Math.random() * 10); --i >= 0; )
                 bw.write(data);
             bw.close();
-            fr = new FileReader(fileName);
+            fr = new FileReader(stringsFile);
             br = new BufferedReader(fr);
             String s = null;
             int count = 0;
-            System.out.println("Read  data from file: " + fileName);
+            System.out.println("Считано из файла: " + stringsFile);
             // Считывать данные, отображая на экран
             while ((s = br.readLine()) != null)
-                System.out.println("row  " + ++count + " read:" + s);
+                System.out.println("Строка " + ++count + ") " + s);
             br.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(System.currentTimeMillis() - timeStart);
-
+        System.out.println();
 
 // Запись строк в стандартный поток вывода
         PrintWriter pw = new PrintWriter(System.out, true);
-        pw.println("Это строка:");
+        pw.println("Это строка: ");
         int i = -7;
         pw.println(i);
         double d = 4.5;
