@@ -4,7 +4,7 @@ public class Pirate implements java.io.Serializable
 {
     String name;
     String address;
-    transient int age; // transient отменяет сериализацию значения свойства
+    int age; // transient отменяет сериализацию значения свойства
 
     public Pirate()
     {

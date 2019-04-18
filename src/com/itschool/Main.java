@@ -9,17 +9,25 @@ public class Main {
 
         // Запись массива байтов
         byte[] bytesToWrite = {65, 97, 45}; //что записываем
-
-        String fileName = "d:\\test.txt", fileName1 = "d:\\test1.txt";
+        FileOutputStream outFile = null;
+        boolean isOpened = false;
+        String fileName = "d:\\1test.txt", fileName1 = "d:\\test1.txt";
         try {
-            FileOutputStream outFile = new FileOutputStream(fileName, true);
+            outFile = new FileOutputStream(fileName, false);
+            isOpened = true;
             outFile.write(bytesToWrite); //запись в файл
-            outFile.close();
+
         } catch (FileNotFoundException e) {
             System.out.println("Невозможно произвести запись в файл:" + fileName);
         } catch (IOException e) {
             System.out.println("Ошибка ввода/вывода:" + e.toString());
         }
+        if (isOpened)
+        {
+            outFile.close();
+        }
+
+
 
         // Чтение массива байтов
         try {
@@ -44,7 +52,7 @@ public class Main {
         FileInputStream inFile1 = null;
         FileInputStream inFile2 = null;
         SequenceInputStream sequenceStream = null;
-        FileOutputStream outFile = null;
+        outFile = null;
         try {
             inFile1 = new FileInputStream("d:\\file1.txt");
         } catch (FileNotFoundException e) {

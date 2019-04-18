@@ -55,8 +55,6 @@ public class Pirates
             c.printStackTrace();
             return;
         }
-
-
     }
 
     public void Clear()
