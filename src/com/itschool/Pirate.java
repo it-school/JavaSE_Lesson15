@@ -1,6 +1,6 @@
 package com.itschool;
 
-public class Pirate implements java.io.Serializable
+class Pirate implements java.io.Serializable
 {
     String name;
     String address;

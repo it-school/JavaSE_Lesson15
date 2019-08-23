@@ -3,9 +3,8 @@ package com.itschool;
 import java.io.*;
 import java.util.ArrayList;
 
-public class Pirates
-{
-    ArrayList<Pirate> pirates;
+class Pirates {
+    private ArrayList<Pirate> pirates;
 
     public Pirates()
     {
@@ -28,7 +27,7 @@ public class Pirates
             out.close();
             fileOut.flush();
             fileOut.close();
-            System.out.printf("Serialized data is saved in file: " + filename);
+            System.out.print("Serialized data is saved in file: " + filename);
         } catch (IOException ex)
         {
             ex.printStackTrace();

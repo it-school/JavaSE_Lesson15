@@ -3,35 +3,121 @@ package com.itschool;
 import java.io.*;
 import java.util.Arrays;
 
-public class Main {
+class Main {
+    private static FileOutputStream outFile;
+    private static FileInputStream inFile;
+    private static String fileName = "d:\\1test.txt";
+    private static String fileName1 = "d:\\test1.txt";
 
     public static void main(String[] args) throws IOException {
+        // Запись строк в стандартный поток вывода
+        PrintWriter pw = new PrintWriter(System.out, true);
+        pw.println("Это строка:");
+        int i = -7;
+        pw.println(i);
+        double d = 4.5;
+        pw.println(d);
 
+        // ArrayRW();
+
+        // SpeedTest();
+
+        // Serialization();
+    }
+
+    private static void SpeedTest() throws IOException {
+        // Тестирование производительности буферизированной записи
+        byte[] bytesReaded = new byte[100];
+        String fileName2 = "file1.txt";
+        InputStream inStream = null;
+        OutputStream outStream = null;
+        //Записать в файл некоторое количество байт
+        long timeStart = System.currentTimeMillis();
+        try {
+            outStream = new FileOutputStream(fileName2);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        for (int i = 100; --i >= 0; ) {
+            try {
+                outStream.write(bytesReaded);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        outStream.flush();
+        outStream.close();
+
+        try {
+            inStream = new FileInputStream(fileName);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        inStream = new BufferedInputStream(inStream);
+        int error = 0;
+        do {
+            error = inStream.read();
+            //  if (error >= 0)
+            //System.out.println(error);
+        } while (error != -1);
+        inStream.close();
+        System.out.println(System.currentTimeMillis() - timeStart);
+
+
+// Запись строковых данных в файл
+        String fileName5 = "d:\\file6.txt";
+        FileWriter fw = null;
+        BufferedWriter bw = null;
+        FileReader fr = null;
+        BufferedReader br = null;
+        // Строка, которая будет записана в файл
+        String data = "Some data to be written and readed \n";
+        try {
+            fw = new FileWriter(fileName5);
+            bw = new BufferedWriter(fw);
+            System.out.println("Write some data to file: " + fileName5);
+            // Несколько раз записать строку
+            for (int i = (int) (Math.random() * 10); --i >= 0; )
+                bw.write(data);
+            bw.close();
+            fr = new FileReader(fileName);
+            br = new BufferedReader(fr);
+            String s = null;
+            int count = 0;
+            System.out.println("Read  data from file: " + fileName);
+            // Считывать данные, отображая на экран
+            while ((s = br.readLine()) != null)
+                System.out.println("row  " + ++count + " read:" + s);
+            br.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(System.currentTimeMillis() - timeStart);
+    }
+
+    private static void ArrayRW() throws IOException {
         // Запись массива байтов
         byte[] bytesToWrite = {65, 97, 45}; //что записываем
-        FileOutputStream outFile = null;
+        outFile = null;
         boolean isOpened = false;
-        String fileName = "d:\\1test.txt", fileName1 = "d:\\test1.txt";
+
         try {
             outFile = new FileOutputStream(fileName, false);
             isOpened = true;
             outFile.write(bytesToWrite); //запись в файл
-
         } catch (FileNotFoundException e) {
             System.out.println("Невозможно произвести запись в файл:" + fileName);
         } catch (IOException e) {
             System.out.println("Ошибка ввода/вывода:" + e.toString());
         }
-        if (isOpened)
-        {
+        if (isOpened) {
             outFile.close();
         }
 
-
-
         // Чтение массива байтов
         try {
-            FileInputStream inFile = new FileInputStream(fileName);
+            inFile = new FileInputStream(fileName);
             int bytesAvailable = inFile.available(); //сколько можно считать
             System.out.println("Available: " + bytesAvailable);
 
@@ -87,90 +173,11 @@ public class Main {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
+    }
 
-        // Тестирование производительности буферизированной записи
-        byte[] bytesReaded = new byte[100];
-        String fileName2 = "file1.txt";
-        InputStream inStream =null;
-        OutputStream outStream =null;
-        //Записать в файл некоторое количество байт
-        long timeStart =System.currentTimeMillis();
-        try {
-            outStream = new FileOutputStream(fileName2);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        for (int i = 100000; --i >= 0; )
-        {
-            try {
-                outStream.write(bytesReaded);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        outStream.flush();
-        outStream.close();
-
-        try {
-            inStream =new FileInputStream(fileName);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        inStream =new BufferedInputStream(inStream);
-        int error = 0;
-        do{
-            error = inStream.read();
-          //  if (error >= 0)
-                //System.out.println(error);
-        }  while(error!=-1);
-        inStream.close();
-        System.out.println(System.currentTimeMillis()-timeStart);
-
-
-// Запись строковых данных в файл
-        String fileName5 = "d:\\file6.txt";
-        FileWriter fw = null;
-        BufferedWriter bw = null;
-        FileReader fr = null;
-        BufferedReader br = null;
-        // Строка, которая будет записана в файл
-        String data = "Some data to be written and readed \n";
-        try {
-            fw = new FileWriter(fileName5);
-            bw = new BufferedWriter(fw);
-            System.out.println("Write some data to file: " + fileName5);
-            // Несколько раз записать строку
-            for (int i = (int) (Math.random() * 10); --i >= 0; )
-                bw.write(data);
-            bw.close();
-            fr = new FileReader(fileName);
-            br = new BufferedReader(fr);
-            String s = null;
-            int count = 0;
-            System.out.println("Read  data from file: " + fileName);
-            // Считывать данные, отображая на экран
-            while ((s = br.readLine()) != null)
-                System.out.println("row  " + ++count + " read:" + s);
-            br.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println(System.currentTimeMillis() - timeStart);
-
-
-// Запись строк в стандартный поток вывода
-        PrintWriter pw = new PrintWriter(System.out, true);
-        pw.println("Это строка:");
-        int i = -7;
-        pw.println(i);
-        double d = 4.5;
-        pw.println(d);
-
-
-// Сериализация простого объекта
+    public static void Serialization() throws IOException {
+        // Сериализация простого объекта
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         Object objSave = new Integer(1);
         ObjectOutputStream oos = new ObjectOutputStream(os);
@@ -185,8 +192,8 @@ public class Main {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        pw.println("--------------------------");
-        pw.println(objRead.toString());
+        System.out.println("--------------------------");
+        System.out.println(objRead.toString());
 
 
 // Сериализация 1 экземпляра пользовательского класса
@@ -203,7 +210,7 @@ public class Main {
             out.close();
             fileOut.flush();
             fileOut.close();
-            System.out.printf("Serialized data is saved in ./pirate.ser");
+            System.out.println("Serialized data is saved in ./pirate.ser");
         } catch (IOException ex) {
             ex.printStackTrace();
         }
