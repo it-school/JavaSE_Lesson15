@@ -1,7 +1,10 @@
 package com.itschool;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.*;
 import java.util.Arrays;
+
 
 class Main {
     private static FileOutputStream outFile;
@@ -10,43 +13,47 @@ class Main {
     private static String fileName1 = "d:\\test1.txt";
 
     public static void main(String[] args) throws IOException {
+/*
         // Запись строк в стандартный поток вывода
         PrintWriter pw = new PrintWriter(System.out, true);
-        pw.println("Это строка:");
+        pw.write("Это строка:");
         int i = -7;
         pw.println(i);
         double d = 4.5;
         pw.println(d);
+*/
 
-        // ArrayRW();
+//        ArrayRW();
 
-        // SpeedTest();
+//         SpeedTest();
 
-        // Serialization();
+        Serialization();
     }
 
     private static void SpeedTest() throws IOException {
+        long timeStart = System.currentTimeMillis();
+        /*
         // Тестирование производительности буферизированной записи
         byte[] bytesReaded = new byte[100];
         String fileName2 = "file1.txt";
         InputStream inStream = null;
         OutputStream outStream = null;
         //Записать в файл некоторое количество байт
-        long timeStart = System.currentTimeMillis();
+
         try {
             outStream = new FileOutputStream(fileName2);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 
-        for (int i = 100; --i >= 0; ) {
+        for (int i = 100000; --i >= 0; ) {
             try {
                 outStream.write(bytesReaded);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        outStream.flush();
+//        outStream.flush();
         outStream.close();
 
         try {
@@ -63,14 +70,14 @@ class Main {
         } while (error != -1);
         inStream.close();
         System.out.println(System.currentTimeMillis() - timeStart);
-
+*/
 
 // Запись строковых данных в файл
         String fileName5 = "d:\\file6.txt";
-        FileWriter fw = null;
-        BufferedWriter bw = null;
-        FileReader fr = null;
-        BufferedReader br = null;
+        FileWriter fw;
+        BufferedWriter bw;
+        FileReader fr;
+        BufferedReader br;
         // Строка, которая будет записана в файл
         String data = "Some data to be written and readed \n";
         try {
@@ -81,11 +88,12 @@ class Main {
             for (int i = (int) (Math.random() * 10); --i >= 0; )
                 bw.write(data);
             bw.close();
-            fr = new FileReader(fileName);
+
+            fr = new FileReader(fileName5);
             br = new BufferedReader(fr);
-            String s = null;
+            String s;
             int count = 0;
-            System.out.println("Read  data from file: " + fileName);
+            System.out.println("Read  data from file: " + fileName5);
             // Считывать данные, отображая на экран
             while ((s = br.readLine()) != null)
                 System.out.println("row  " + ++count + " read:" + s);
@@ -137,7 +145,7 @@ class Main {
         // Сцепление содержимого файлов
         FileInputStream inFile1 = null;
         FileInputStream inFile2 = null;
-        SequenceInputStream sequenceStream = null;
+        SequenceInputStream sequenceStream;
         outFile = null;
         try {
             inFile1 = new FileInputStream("d:\\file1.txt");
@@ -176,7 +184,7 @@ class Main {
         }
     }
 
-    public static void Serialization() throws IOException {
+    private static void Serialization() throws IOException {
         // Сериализация простого объекта
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         Object objSave = new Integer(1);
@@ -193,7 +201,7 @@ class Main {
             e.printStackTrace();
         }
         System.out.println("--------------------------");
-        System.out.println(objRead.toString());
+        System.out.println(objRead != null ? objRead.toString() : "");
 
 
 // Сериализация 1 экземпляра пользовательского класса
@@ -206,16 +214,14 @@ class Main {
             FileOutputStream fileOut = new FileOutputStream("./pirate.ser");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(pirate);
-            out.flush();
             out.close();
-            fileOut.flush();
             fileOut.close();
             System.out.println("Serialized data is saved in ./pirate.ser");
         } catch (IOException ex) {
             ex.printStackTrace();
         }
         // ---------deserialize -----------
-        Pirate e1 = null;
+        Pirate e1;
         try {
             FileInputStream fileIn = new FileInputStream("./pirate.ser");
             ObjectInputStream in = new ObjectInputStream(fileIn);
@@ -254,5 +260,11 @@ class Main {
         pirates.Load("./pirates.ser");
         System.out.println("\n\nDeserialized pirates: ...");
         System.out.println(pirates.toString());
+
+// Jackson library seriaization
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValue(new File("car.json"), pirate);
+        Pirate car = objectMapper.readValue(new File("car.json"), Pirate.class);
+        System.out.println(car);
     }
 }

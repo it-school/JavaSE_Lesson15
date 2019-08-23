@@ -23,9 +23,9 @@ class Pirates {
             FileOutputStream fileOut = new FileOutputStream(filename);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(pirates);
-            out.flush();
+            // out.flush();
             out.close();
-            fileOut.flush();
+            //fileOut.flush();
             fileOut.close();
             System.out.print("Serialized data is saved in file: " + filename);
         } catch (IOException ex)
@@ -38,7 +38,6 @@ class Pirates {
     {
         try
         {
-            File file;
             FileInputStream fileIn = new FileInputStream(filename);
             ObjectInputStream in = new ObjectInputStream(fileIn);
             this.pirates = (ArrayList<Pirate>) in.readObject();
@@ -64,14 +63,10 @@ class Pirates {
     @Override
     public String toString()
     {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (Pirate p : this.pirates)
-        {
-            result += p.toString();
-        }
+            result.append(p.toString());
 
-        return result;
+        return result.toString();
     }
-
-
 }
