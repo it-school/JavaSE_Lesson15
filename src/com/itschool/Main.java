@@ -263,8 +263,8 @@ class Main {
 
 // Jackson library seriaization
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(new File("car.json"), pirate);
-        Pirate car = objectMapper.readValue(new File("car.json"), Pirate.class);
-        System.out.println(car);
+        objectMapper.writeValue(new File("pirates.json"), pirate);
+        Pirate pirate1 = objectMapper.readValue(new File("pirates.json"), Pirate.class);
+        System.out.println(pirate1);
     }
 }
