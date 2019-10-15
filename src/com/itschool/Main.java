@@ -1,6 +1,9 @@
 package com.itschool;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.compress.archivers.ArchiveException;
 
 import java.io.*;
 import java.util.Arrays;
@@ -263,8 +266,23 @@ class Main {
 
 // Jackson library seriaization
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(new File("pirates.json"), pirate);
-        Pirate pirate1 = objectMapper.readValue(new File("pirates.json"), Pirate.class);
+        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        objectMapper.writeValue(new File("pirate.json"), pirate);
+        Pirate pirate1 = objectMapper.readValue(new File("pirate.json"), Pirate.class);
         System.out.println(pirate1);
+
+        // Deserialized Class Pirates
+        System.out.println("\nDeserialized Class Pirates");
+        ObjectMapper objectMapperList = new ObjectMapper();
+        objectMapper.writeValue(new File("pirates.json"), pirates);
+        Pirates piratesTeam = objectMapper.readValue(new File("pirates.json"), Pirates.class);
+        System.out.println(piratesTeam);
+
+        System.out.println();
+        try {
+            Packer.pack(new File(System.getProperty("user.dir") + "/src/backup/"), new File("pirates.json.zip"));
+        } catch (ArchiveException e) {
+            e.printStackTrace();
+        }
     }
 }

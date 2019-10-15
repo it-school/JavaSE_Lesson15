@@ -3,12 +3,16 @@ package com.itschool;
 import java.io.*;
 import java.util.ArrayList;
 
-class Pirates {
+class Pirates implements java.io.Serializable {
     private ArrayList<Pirate> pirates;
 
     public Pirates()
     {
         pirates = new ArrayList<>();
+    }
+
+    public Pirates(ArrayList<Pirate> pirates) {
+        this.pirates = pirates;
     }
 
     public void Add(Pirate pirate)
