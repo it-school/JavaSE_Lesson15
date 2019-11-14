@@ -8,7 +8,6 @@ import org.apache.commons.compress.archivers.ArchiveException;
 import java.io.*;
 import java.util.Arrays;
 
-
 class Main {
     private static FileOutputStream outFile;
     private static FileInputStream inFile;
@@ -26,16 +25,16 @@ class Main {
         pw.println(d);
 */
 
-//        ArrayRW();
+        //   ArrayRW();
 
-//         SpeedTest();
+        // SpeedTest();
 
         Serialization();
     }
 
     private static void SpeedTest() throws IOException {
         long timeStart = System.currentTimeMillis();
-        /*
+/*
         // Тестирование производительности буферизированной записи
         byte[] bytesReaded = new byte[100];
         String fileName2 = "file1.txt";
@@ -49,7 +48,7 @@ class Main {
             e.printStackTrace();
         }
 
-        for (int i = 100000; --i >= 0; ) {
+        for (int i = 1000; --i >= 0; ) {
             try {
                 outStream.write(bytesReaded);
             } catch (IOException e) {
@@ -57,7 +56,6 @@ class Main {
             }
         }
 //        outStream.flush();
-        outStream.close();
 
         try {
             inStream = new FileInputStream(fileName);
@@ -71,8 +69,10 @@ class Main {
             //  if (error >= 0)
             //System.out.println(error);
         } while (error != -1);
-        inStream.close();
+
         System.out.println(System.currentTimeMillis() - timeStart);
+        outStream.close();
+        inStream.close();
 */
 
 // Запись строковых данных в файл
@@ -105,6 +105,27 @@ class Main {
             e.printStackTrace();
         }
         System.out.println(System.currentTimeMillis() - timeStart);
+
+        String s = "";
+        int n = 0;
+        fileName5 = "d:\\Dropbox\\Utils\\DiskCleaner\\Languages\\English.ini";
+        try {
+            fr = new FileReader(fileName5);
+            br = new BufferedReader(fr);
+            while ((s = br.readLine()) != null) {
+                if (n == 1) {
+                    System.out.println(s.substring(s.indexOf("=") + 1));
+                    break;
+                }
+                if (s.contains("[Lang]"))
+                    n++;
+
+            }
+            br.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private static void ArrayRW() throws IOException {
@@ -114,7 +135,7 @@ class Main {
         boolean isOpened = false;
 
         try {
-            outFile = new FileOutputStream(fileName, false);
+            outFile = new FileOutputStream(fileName, true);
             isOpened = true;
             outFile.write(bytesToWrite); //запись в файл
         } catch (FileNotFoundException e) {
@@ -162,7 +183,7 @@ class Main {
         }
         sequenceStream = new SequenceInputStream(inFile1, inFile2);
         try {
-            outFile = new FileOutputStream("d:\\file3.txt");
+            outFile = new FileOutputStream("d:\\file3.txt", true);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -211,7 +232,7 @@ class Main {
         Pirate pirate = new Pirate();
         pirate.name = "Long John Silver";
         pirate.address = "Treasure Island";
-        pirate.age = 40;
+        pirate.age = 42;
 
         try {
             FileOutputStream fileOut = new FileOutputStream("./pirate.ser");
@@ -224,7 +245,7 @@ class Main {
             ex.printStackTrace();
         }
         // ---------deserialize -----------
-        Pirate e1;
+        Pirate e1 = null;
         try {
             FileInputStream fileIn = new FileInputStream("./pirate.ser");
             ObjectInputStream in = new ObjectInputStream(fileIn);
@@ -271,14 +292,14 @@ class Main {
         Pirate pirate1 = objectMapper.readValue(new File("pirate.json"), Pirate.class);
         System.out.println(pirate1);
 
-        // Deserialized Class Pirates
+        // Serialization of Pirates Class object
         System.out.println("\nDeserialized Class Pirates");
         ObjectMapper objectMapperList = new ObjectMapper();
         objectMapper.writeValue(new File("pirates.json"), pirates);
         Pirates piratesTeam = objectMapper.readValue(new File("pirates.json"), Pirates.class);
         System.out.println(piratesTeam);
 
-        System.out.println();
+        System.out.println("\nLet's zip out file");
         try {
             Packer.pack(new File(System.getProperty("user.dir") + "/src/backup/"), new File("pirates.json.zip"));
         } catch (ArchiveException e) {

@@ -3,7 +3,7 @@ package com.itschool;
 import java.io.*;
 import java.util.ArrayList;
 
-class Pirates implements java.io.Serializable {
+class Pirates {
     private ArrayList<Pirate> pirates;
 
     public Pirates()
