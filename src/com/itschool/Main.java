@@ -32,13 +32,58 @@ class Main {
         pw.println(d);
 */
 
-      ArrayRW();
+      //ArrayRW();
 
-      SpeedTest();
+      FilesConcatenation();
 
-      Serialization();
+      //SpeedTest();
 
-      classWork();
+      //Serialization();
+
+      //classWork();
+   }
+
+   private static void FilesConcatenation() {
+      // Сцепление содержимого файлов
+      FileInputStream inFile1 = null;
+      FileInputStream inFile2 = null;
+      SequenceInputStream sequenceStream;
+      outFile = null;
+      try {
+         inFile1 = new FileInputStream("filecat1.txt");
+      } catch (FileNotFoundException e) {
+         e.printStackTrace();
+      }
+      try {
+         inFile2 = new FileInputStream("filecat2.txt");
+      } catch (FileNotFoundException e) {
+         e.printStackTrace();
+      }
+      sequenceStream = new SequenceInputStream(inFile1, inFile2);
+      try {
+         outFile = new FileOutputStream("filecat3.txt", true);
+      } catch (FileNotFoundException e) {
+         e.printStackTrace();
+      }
+
+      int readedByte = 0;
+      try {
+         readedByte = sequenceStream.read();
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
+      while (readedByte != -1) {
+         try {
+            outFile.write(readedByte);
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+         try {
+            readedByte = sequenceStream.read();
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+      }
    }
 
    private static void classWork() {
@@ -208,49 +253,6 @@ class Main {
       } catch (IOException e) {
          System.out.println("Ошибка ввода/вывода:" + e.toString());
       }
-
-
-      // Сцепление содержимого файлов
-      FileInputStream inFile1 = null;
-      FileInputStream inFile2 = null;
-      SequenceInputStream sequenceStream;
-      outFile = null;
-      try {
-         inFile1 = new FileInputStream("d:\\1test.txt");
-      } catch (FileNotFoundException e) {
-         e.printStackTrace();
-      }
-      try {
-         inFile2 = new FileInputStream("d:\\1test.txt");
-      } catch (FileNotFoundException e) {
-         e.printStackTrace();
-      }
-      sequenceStream = new SequenceInputStream(inFile1, inFile2);
-      try {
-         outFile = new FileOutputStream("d:\\file2.txt", true);
-      } catch (FileNotFoundException e) {
-         e.printStackTrace();
-      }
-
-      int readedByte = 0;
-      try {
-         readedByte = sequenceStream.read();
-      } catch (IOException e) {
-         e.printStackTrace();
-      }
-      while (readedByte != -1) {
-         try {
-            outFile.write(readedByte);
-         } catch (IOException e) {
-            e.printStackTrace();
-         }
-         try {
-            readedByte = sequenceStream.read();
-         } catch (IOException e) {
-            e.printStackTrace();
-         }
-      }
-
    }
 
    private static void Serialization() throws IOException {
