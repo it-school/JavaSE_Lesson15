@@ -1,5 +1,7 @@
 package com.itschool;
 
+// https://repo1.maven.org/maven2/com/fasterxml/jackson/core/
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,8 +13,8 @@ import java.util.Arrays;
 class Main {
     private static FileOutputStream outFile;
     private static FileInputStream inFile;
-    private static String fileName = "d:\\1test.txt";
-    private static String fileName1 = "d:\\test1.txt";
+    private static final String fileName = "d:\\1test.txt";
+    private static final String fileName1 = "d:\\test1.txt";
 
     public static void main(String[] args) throws IOException {
 /*
