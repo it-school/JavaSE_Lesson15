@@ -5,10 +5,14 @@ package com.itschool;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itschool.classwork.Animals;
+import com.itschool.classwork.Pet;
+import com.itschool.classwork.PetType;
 import org.apache.commons.compress.archivers.ArchiveException;
 
 import java.io.*;
 import java.util.Arrays;
+import java.util.GregorianCalendar;
 import java.util.Random;
 
 class Main {
@@ -28,11 +32,63 @@ class Main {
         pw.println(d);
 */
 
-      // ArrayRW();
+      ArrayRW();
 
-      // SpeedTest();
+      SpeedTest();
 
       Serialization();
+
+      classWork();
+   }
+
+   private static void classWork() {
+      Pet cat = new Pet(PetType.cat, "Tom", new GregorianCalendar(2015, 10, 20));
+      Pet dog = new Pet(PetType.dog, "Barbos", new GregorianCalendar(2017, 1, 2));
+      Pet snake = new Pet(PetType.snake, "Kaa", new GregorianCalendar(2005, 10, 20));
+
+      System.out.println(cat);
+
+      try {
+         FileOutputStream fileOut = new FileOutputStream("./cat.ser");
+         ObjectOutputStream out = new ObjectOutputStream(fileOut);
+         out.writeObject(cat);
+         out.close();
+         fileOut.close();
+         System.out.println("Serialized data is saved in ./cat.ser");
+      } catch (IOException ex) {
+         ex.printStackTrace();
+      }
+      // ---------deserialize -----------
+      Pet newCat = null;
+      try {
+         FileInputStream fileIn = new FileInputStream("./cat.ser");
+         ObjectInputStream in = new ObjectInputStream(fileIn);
+         newCat = (Pet) in.readObject();
+         in.close();
+         fileIn.close();
+      } catch (IOException ex) {
+         ex.printStackTrace();
+         return;
+      } catch (ClassNotFoundException c) {
+         System.out.println("Pet class not found");
+         c.printStackTrace();
+         return;
+      }
+
+      System.out.println("\nDeserialized animal..." + cat);
+      System.out.println("\n----------------------------------");
+
+      Animals zoo = new Animals();
+      zoo.add(dog, cat, snake, new Pet(PetType.fish, "Freddy", GregorianCalendar.getInstance()));
+      System.out.println("Serialized animals:\n" + zoo);
+      System.out.println("\n----------------------------------");
+
+      zoo.save("zoo.ser");
+
+      zoo = new Animals();
+      zoo.load("zoo.ser");
+      System.out.println("Deserialized animals:\n" + zoo);
+
    }
 
    private static void SpeedTest() throws IOException {

@@ -3,17 +3,17 @@
     {
       "name": "Long John Silver",
       "address": "Treasure Island",
-      "age": 0
+      "age": 65
     },
     {
       "name": "Dr. David Livesey",
       "address": "Bristol",
-      "age": 0
+      "age": 100
     },
     {
       "name": "Captain Alexander Smollett",
       "address": "Bristol",
-      "age": 0
+      "age": 100000
     }
   ]
 }
