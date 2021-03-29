@@ -22,28 +22,68 @@ class Main {
    private static FileInputStream inFile;
 
    public static void main(String[] args) throws IOException {
-/*
-        // Запись строк в стандартный поток вывода
-        PrintWriter pw = new PrintWriter(System.out, true);
-        pw.write("Это строка:");
-        int i = -7;
-        pw.println(i);
-        double d = 4.5;
-        pw.println(d);
-*/
+      soutAnalogue();
 
-      //ArrayRW();
+      arraysReadWrite();
 
-      FilesConcatenation();
+      filesConcatenation();
 
-      //SpeedTest();
+      speedTest();
 
-      //Serialization();
+      serialization();
 
-      //classWork();
+      classWork();
    }
 
-   private static void FilesConcatenation() {
+   private static void soutAnalogue() {
+      // Запись строк в стандартный поток вывода
+      PrintWriter pw = new PrintWriter(System.out, true);
+      pw.write("Это строка:");
+      int i = -7;
+      pw.println(i);
+      double d = 4.5;
+      pw.println(d);
+   }
+
+   private static void arraysReadWrite() throws IOException {
+      // Запись массива байтов в файл
+      byte[] bytesToWrite = {65, 97, 45, 48, 10}; // что записываем
+      outFile = null;
+      boolean isOpened = false;
+
+      try {
+         outFile = new FileOutputStream(fileName, true);
+         isOpened = true;
+         outFile.write(bytesToWrite); //запись в файл
+      } catch (FileNotFoundException e) {
+         System.out.println("Невозможно произвести запись в файл:" + fileName);
+      } catch (IOException e) {
+         System.out.println("Ошибка ввода/вывода:" + e.toString());
+      }
+      if (isOpened) {
+         outFile.close();
+      }
+
+      // Чтение массива байтов из файла
+      try {
+         inFile = new FileInputStream(fileName);
+         int bytesAvailable = inFile.available(); //сколько можно считать
+         System.out.println("Available: " + bytesAvailable);
+
+         byte[] bytesReaded = new byte[bytesAvailable]; //куда считываем
+         int count = inFile.read(bytesReaded, 0, bytesAvailable);
+
+         System.out.println(Arrays.toString(bytesReaded));
+
+         inFile.close();
+      } catch (FileNotFoundException e) {
+         System.out.println("Невозможно произвести чтение из файла:" + fileName1);
+      } catch (IOException e) {
+         System.out.println("Ошибка ввода/вывода:" + e.toString());
+      }
+   }
+
+   private static void filesConcatenation() {
       // Сцепление содержимого файлов
       FileInputStream inFile1 = null;
       FileInputStream inFile2 = null;
@@ -86,57 +126,7 @@ class Main {
       }
    }
 
-   private static void classWork() {
-      Pet cat = new Pet(PetType.cat, "Tom", new GregorianCalendar(2015, 10, 20));
-      Pet dog = new Pet(PetType.dog, "Barbos", new GregorianCalendar(2017, 1, 2));
-      Pet snake = new Pet(PetType.snake, "Kaa", new GregorianCalendar(2005, 10, 20));
-
-      System.out.println(cat);
-
-      try {
-         FileOutputStream fileOut = new FileOutputStream("./cat.ser");
-         ObjectOutputStream out = new ObjectOutputStream(fileOut);
-         out.writeObject(cat);
-         out.close();
-         fileOut.close();
-         System.out.println("Serialized data is saved in ./cat.ser");
-      } catch (IOException ex) {
-         ex.printStackTrace();
-      }
-      // ---------deserialize -----------
-      Pet newCat = null;
-      try {
-         FileInputStream fileIn = new FileInputStream("./cat.ser");
-         ObjectInputStream in = new ObjectInputStream(fileIn);
-         newCat = (Pet) in.readObject();
-         in.close();
-         fileIn.close();
-      } catch (IOException ex) {
-         ex.printStackTrace();
-         return;
-      } catch (ClassNotFoundException c) {
-         System.out.println("Pet class not found");
-         c.printStackTrace();
-         return;
-      }
-
-      System.out.println("\nDeserialized animal..." + cat);
-      System.out.println("\n----------------------------------");
-
-      Animals zoo = new Animals();
-      zoo.add(dog, cat, snake, new Pet(PetType.fish, "Freddy", GregorianCalendar.getInstance()));
-      System.out.println("Serialized animals:\n" + zoo);
-      System.out.println("\n----------------------------------");
-
-      zoo.save("zoo.ser");
-
-      zoo = new Animals();
-      zoo.load("zoo.ser");
-      System.out.println("Deserialized animals:\n" + zoo);
-
-   }
-
-   private static void SpeedTest() throws IOException {
+   private static void speedTest() throws IOException {
       Random random = new Random();
       // Тестирование производительности буферизированной записи
       byte[] bytesReaded = new byte[1024];
@@ -217,45 +207,7 @@ class Main {
 
    }
 
-   private static void ArrayRW() throws IOException {
-      // Запись массива байтов
-      byte[] bytesToWrite = {65, 97, 45, 48}; // что записываем
-      outFile = null;
-      boolean isOpened = false;
-
-      try {
-         outFile = new FileOutputStream(fileName, true);
-         isOpened = true;
-         outFile.write(bytesToWrite); //запись в файл
-      } catch (FileNotFoundException e) {
-         System.out.println("Невозможно произвести запись в файл:" + fileName);
-      } catch (IOException e) {
-         System.out.println("Ошибка ввода/вывода:" + e.toString());
-      }
-      if (isOpened) {
-         outFile.close();
-      }
-
-      // Чтение массива байтов
-      try {
-         inFile = new FileInputStream(fileName);
-         int bytesAvailable = inFile.available(); //сколько можно считать
-         System.out.println("Available: " + bytesAvailable);
-
-         byte[] bytesReaded = new byte[bytesAvailable]; //куда считываем
-         int count = inFile.read(bytesReaded, 0, bytesAvailable);
-
-         System.out.println(Arrays.toString(bytesReaded));
-
-         inFile.close();
-      } catch (FileNotFoundException e) {
-         System.out.println("Невозможно произвести чтение из файла:" + fileName1);
-      } catch (IOException e) {
-         System.out.println("Ошибка ввода/вывода:" + e.toString());
-      }
-   }
-
-   private static void Serialization() throws IOException {
+   private static void serialization() throws IOException {
       // Сериализация простого объекта
       ByteArrayOutputStream os = new ByteArrayOutputStream();
       Object objSave = new Integer(1);
@@ -353,5 +305,55 @@ class Main {
       } catch (ArchiveException e) {
          e.printStackTrace();
       }
+   }
+
+   private static void classWork() {
+      Pet cat = new Pet(PetType.cat, "Tom", new GregorianCalendar(2015, 10, 20));
+      Pet dog = new Pet(PetType.dog, "Barbos", new GregorianCalendar(2017, 1, 2));
+      Pet snake = new Pet(PetType.snake, "Kaa", new GregorianCalendar(2005, 10, 20));
+
+      System.out.println(cat);
+
+      try {
+         FileOutputStream fileOut = new FileOutputStream("./cat.ser");
+         ObjectOutputStream out = new ObjectOutputStream(fileOut);
+         out.writeObject(cat);
+         out.close();
+         fileOut.close();
+         System.out.println("Serialized data is saved in ./cat.ser");
+      } catch (IOException ex) {
+         ex.printStackTrace();
+      }
+      // ---------deserialize -----------
+      Pet newCat = null;
+      try {
+         FileInputStream fileIn = new FileInputStream("./cat.ser");
+         ObjectInputStream in = new ObjectInputStream(fileIn);
+         newCat = (Pet) in.readObject();
+         in.close();
+         fileIn.close();
+      } catch (IOException ex) {
+         ex.printStackTrace();
+         return;
+      } catch (ClassNotFoundException c) {
+         System.out.println("Pet class not found");
+         c.printStackTrace();
+         return;
+      }
+
+      System.out.println("\nDeserialized animal..." + cat);
+      System.out.println("\n----------------------------------");
+
+      Animals zoo = new Animals();
+      zoo.add(dog, cat, snake, new Pet(PetType.fish, "Freddy", GregorianCalendar.getInstance()));
+      System.out.println("Serialized animals:\n" + zoo);
+      System.out.println("\n----------------------------------");
+
+      zoo.save("zoo.ser");
+
+      zoo = new Animals();
+      zoo.load("zoo.ser");
+      System.out.println("Deserialized animals:\n" + zoo);
+
    }
 }
