@@ -16,8 +16,8 @@ import java.util.GregorianCalendar;
 import java.util.Random;
 
 class Main {
-   private static final String fileName = "d:\\1test.txt";
-   private static final String fileName1 = "d:\\test1.txt";
+   private static final String fileName = "C:\\Users\\vence\\AppData\\Local\\Temp\\1test.txt";
+   private static final String fileName1 = "C:\\Users\\vence\\AppData\\Local\\Temp\\test1.txt";
    private static FileOutputStream outFile;
 
    public static void main(String[] args) throws IOException {
@@ -155,11 +155,11 @@ class Main {
     */
    private static void speedTestBinary() throws IOException {
       Random random = new Random();
-      byte[] bytesArray = new byte[1024];
+      byte[] bytesArray = new byte[1024 * 1024];
       for (int i = 0; i < bytesArray.length; i++) {
          bytesArray[i] = (byte) random.nextInt();
       }
-      String fileName2 = "d:\\file1.txt";
+      String fileName2 = "C:\\Users\\vence\\AppData\\Local\\Temp\\file1.txt";
       InputStream inStream = null;
       OutputStream outStream = null;
 
@@ -350,9 +350,16 @@ class Main {
       objectMapper.writeValue(new File("pirates.json"), pirates);
 
 // Десериализация объекта класс Pirates с использованием библиотеки Jackson
-      Pirates piratesTeam = objectMapper.readValue(new File("pirates.json"), Pirates.class);
+      Pirates piratesTeam = null;
+      boolean isSuccessful = false;
+      try {
+         piratesTeam = objectMapper.readValue(new File("pirates1.json"), Pirates.class);
+         isSuccessful = true;
+      } catch (Exception e) {
+         System.out.println("FasterJackson deserialization error!");
+      }
       System.out.println("\nDeserialized Class Pirates");
-      System.out.println(piratesTeam);
+      System.out.println(isSuccessful ? piratesTeam : "can't show empty list");
 
 // Упаковка в ZIP-архив
       System.out.println("\nLet's zip out file");
