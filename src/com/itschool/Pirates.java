@@ -64,4 +64,12 @@ class Pirates {
 
       return result.toString();
    }
+
+   public Pirates filterByName(String name) {
+      Pirates filteredPirates = new Pirates();
+      for (Pirate p : this.pirates) {
+         if (p.getName().toLowerCase().contains(name.strip().toLowerCase())) filteredPirates.pirates.add(p);
+      }
+      return filteredPirates;
+   }
 }

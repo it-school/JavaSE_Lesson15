@@ -16,8 +16,8 @@ import java.util.GregorianCalendar;
 import java.util.Random;
 
 class Main {
-   private static final String fileName = "C:\\Users\\vence\\AppData\\Local\\Temp\\1test.txt";
-   private static final String fileName1 = "C:\\Users\\vence\\AppData\\Local\\Temp\\test1.txt";
+   private static final String fileName = "./1test.txt";
+   private static final String fileName1 = "./test1.txt";
    private static FileOutputStream outFile;
 
    public static void main(String[] args) throws IOException {
@@ -155,7 +155,8 @@ class Main {
     */
    private static void speedTestBinary() throws IOException {
       Random random = new Random();
-      byte[] bytesArray = new byte[1024 * 1024];
+      final int SIZE = 1024;
+      byte[] bytesArray = new byte[SIZE * SIZE];
       for (int i = 0; i < bytesArray.length; i++) {
          bytesArray[i] = (byte) random.nextInt();
       }
@@ -173,7 +174,7 @@ class Main {
       }
 
       if (outStream != null) {
-         for (int i = 1024; --i >= 0; ) {
+         for (int i = SIZE; --i >= 0; ) {
             try {
                outStream.write(bytesArray);
             } catch (IOException e) {
@@ -183,6 +184,9 @@ class Main {
          outStream.flush();
          outStream.close();
       }
+
+      System.out.println("Затрачено времени на запись: " + (System.currentTimeMillis() - timeStart));
+      timeStart = System.currentTimeMillis();
 
       // читаем записанные данные
       try {
@@ -203,7 +207,7 @@ class Main {
          inStream.close();
       }
 
-      System.out.println("Затрачено времени: " + (System.currentTimeMillis() - timeStart));
+      System.out.println("Затрачено времени на чтение: " + (System.currentTimeMillis() - timeStart));
    }
 
 
@@ -213,19 +217,19 @@ class Main {
    private static void speedTestText() {
       long timeStart = System.currentTimeMillis();
 
-      String fileName5 = "d:\\file6.txt";
+      String fileName5 = "./file6.txt";
       FileWriter fw;
       BufferedWriter bw;
       FileReader fr;
       BufferedReader br;
       // Строка, которая будет записана в файл
-      String data = "Some data to be written and read \n";
+      String data = "_ Some data to be written and read \n";
       try {
          fw = new FileWriter(fileName5);
          bw = new BufferedWriter(fw);
          System.out.println("\nWrite some data to file: " + fileName5);
          // Несколько раз записываем строку
-         for (int i = 100; --i >= 0; )
+         for (int i = 1000000; --i >= 0; )
             bw.write(data);
 
          bw.close();
@@ -342,7 +346,7 @@ class Main {
       pirates.Add(new Pirate("Long John Silver", "Treasure Island", 65));
       pirates.Add(new Pirate("Dr. David Livesey", "Bristol", 100));
       pirates.Add(new Pirate("Captain Alexander Smollett", "Bristol", 1000));
-      System.out.println(pirates);
+      System.out.println(pirates.filterByName("Long"));
 
 // Сериализация объекта класс Pirates с использованием библиотеки Jackson
       ObjectMapper objectMapper = new ObjectMapper();
@@ -383,7 +387,7 @@ class Main {
       try {
          rates = objectMapper.readValue(new URL("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5"), Currency[].class);
       } catch (IOException e) {
-         //e.printStackTrace();
+         e.printStackTrace();
          System.out.println("Network is inaccessible\nExchage using last loaded rate: ");
          rates = objectMapper.readValue(new File("./rates.json"), Currency[].class);
       }
@@ -392,7 +396,25 @@ class Main {
          System.out.println(rate);
       }
 
-      System.out.printf("%d x %5.2f = %5.2f", 200, Double.parseDouble(rates[0].getSale()), 200 * Double.parseDouble(rates[0].getSale()));
+//      System.out.printf("%d x %5.2f = %5.2f", 200, Double.parseDouble(rates[0].getSale()), 200 * Double.parseDouble(rates[0].getSale()));
+      System.out.println();
+      Arrays.sort(rates, Currency.bySale);
+
+      for (Currency rate : rates) {
+         System.out.println(rate);
+      }
+
+      System.out.println();
+      Arrays.sort(rates, Currency.byName);
+      for (Currency rate : rates) {
+         System.out.println(rate);
+      }
+
+      Arrays.sort(rates, (o1, o2) -> o2.getCcy().compareTo(o1.getCcy()));
+      System.out.println();
+      for (Currency rate : rates) {
+         System.out.println(rate);
+      }
    }
 
 

@@ -1,6 +1,11 @@
 package com.itschool;
 
+import java.util.Comparator;
+
 public class Currency {
+   public static Comparator<Currency> bySale = (o1, o2) -> Double.parseDouble(o1.getSale()) > Double.parseDouble(o2.getSale()) ? 1 : -1;
+   public static Comparator<Currency> byBuy = (o1, o2) -> Double.parseDouble(o1.getBuy()) > Double.parseDouble(o2.getBuy()) ? 1 : -1;
+   public static Comparator<Currency> byName = (o1, o2) -> o1.ccy.compareTo(o2.ccy) > 0 ? 1 : -1;
    private String ccy;
    private String base_ccy;
    private String buy;

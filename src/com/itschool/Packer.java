@@ -11,32 +11,32 @@ import java.io.*;
 import java.util.Collection;
 
 public class Packer {
-    private static String getEntryName(File source, File file) throws IOException {
-        int index = source.getAbsolutePath().length() + 1;
-        String path = file.getCanonicalPath();
+   private static String getEntryName(File source, File file) throws IOException {
+      int index = source.getAbsolutePath().length() + 1;
+      String path = file.getCanonicalPath();
 
-        return path.substring(index);
-    }
+      return path.substring(index);
+   }
 
-    public static void pack(File source, File destination) throws IOException, ArchiveException {
-        OutputStream archiveStream = new FileOutputStream(destination);
-        ArchiveOutputStream archive = new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.ZIP, archiveStream);
+   public static void pack(File source, File destination) throws IOException, ArchiveException {
+      OutputStream archiveStream = new FileOutputStream(destination);
+      ArchiveOutputStream archive = new ArchiveStreamFactory().createArchiveOutputStream(ArchiveStreamFactory.ZIP, archiveStream);
 
-        Collection<File> fileList = FileUtils.listFiles(source, null, true);
+      Collection<File> fileList = FileUtils.listFiles(source, null, true);
 
-        for (File file : fileList) {
-            String entryName = getEntryName(source, file);
-            ZipArchiveEntry entry = new ZipArchiveEntry(entryName);
-            archive.putArchiveEntry(entry);
+      for (File file : fileList) {
+         String entryName = getEntryName(source, file);
+         ZipArchiveEntry entry = new ZipArchiveEntry(entryName);
+         archive.putArchiveEntry(entry);
 
-            BufferedInputStream input = new BufferedInputStream(new FileInputStream(file));
+         BufferedInputStream input = new BufferedInputStream(new FileInputStream(file));
 
-            IOUtils.copy(input, archive);
-            input.close();
-            archive.closeArchiveEntry();
-        }
+         IOUtils.copy(input, archive);
+         input.close();
+         archive.closeArchiveEntry();
+      }
 
-        archive.finish();
-        archiveStream.close();
-    }
+      archive.finish();
+      archiveStream.close();
+   }
 }
